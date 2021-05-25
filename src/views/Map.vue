@@ -105,6 +105,7 @@ export default {
       });
     },
     goToHubu() {
+        // goTo 返回的是一个promise，在then里面继续跳转
         this.sView.goTo({
           center: [114.32343438218466, 30.57965948283841],
           zoom: 4,
@@ -133,18 +134,22 @@ export default {
       },
     changeBase(val) {
       console.log(val);
+      // 把点击的底图的value 传给basemap 完成修改底图
       this.sView.map.basemap = val;
     },
     addLayer(url) {
+      // 创建要素图层，存进drawLayers
       this.drawLayers[url] = new FeatureLayer({
         url,
       });
+      // 添加图层 设置图层层级
       this.sMap.add(this.drawLayers[url], this.showLayers.length - 1);
     },
     rmlayer(url) {
       this.sMap.remove(this.drawLayers[url]);
     },
     boxChange(event, item) {
+      // event 只有 true / false
       if (event) {
         this.addLayer(item.url);
         this.flashTo(item.center, item.zoom);
@@ -157,9 +162,6 @@ export default {
     this.initMap();
   },
   watch: {
-    showLayers(newVal) {
-      console.log(newVal);
-    },
   },
 };
 </script>
