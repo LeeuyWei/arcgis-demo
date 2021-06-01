@@ -1,6 +1,10 @@
 <template>
   <div class="custom-map">
-    <div id="mapWrap"></div>
+    <div class="multi-map-wrap">
+      <div id="mapWrap"></div>
+      <div id="otherMap" v-show="showLinkMap" ref="otherMap"></div>
+      <div id="swipeMap" v-show="showSwipe" ref="swipeMap"></div>
+    </div>
     <span id="info"
           style="position:absolute; left:100px; bottom: 100px; color:#0079c1; z-index:50;"></span>
     <div class="operate-wrap">
@@ -29,6 +33,10 @@
           </el-checkbox>
         </el-checkbox-group>
       </div>
+      <div class="add-link-map">
+        <div>地图联动</div>
+        <el-button @click="addLink">添加地图联动</el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -46,6 +54,8 @@ export default {
     return {
       sMap: null,
       sView: null,
+      showLinkMap: false,
+      showSwipe: false,
       currentBase: 'arcgis-topographic',
       baseOpt: [
         {
@@ -82,6 +92,10 @@ export default {
       ],
       showLayers: [],
       drawLayers: {},
+      currentZoom: 9,
+      currentCenter: [114.32343438218466, 30.57965948283841],
+      otherMap: null,
+      otherMapView: null,
     };
   },
   methods: {
@@ -93,25 +107,49 @@ export default {
       // eslint-disable-next-line no-unused-vars
       this.sView = new MapView({
         map: this.sMap,
-        center: [114.32343438218466, 30.57965948283841],
-        zoom: 9, // Zoom level
+        center: this.currentCenter,
+        zoom: this.currentZoom, // Zoom level
         container: 'mapWrap', // Div element
       });
 
       this.sView.when(() => {
         // after map loads, connect to listen to mouse move & drag events
         this.sView.on("pointer-move", this.showCoordinates);
-        this.sView.on("click", (evt) => { console.log(evt, [evt.mapPoint.longitude, evt.mapPoint.latitude]); });
+        this.sView.on("click", (evt) => {
+          console.log(evt, [evt.mapPoint.longitude, evt.mapPoint.latitude]);
+        });
+      });
+    },
+    addLink() {
+      if (this.showLinkMap) {
+        this.showLinkMap = false;
+        return;
+      }
+      this.showLinkMap = true;
+      this.otherMap = new Map({
+        basemap: "osm",
+      });
+      this.otherMapView = new MapView({
+        map: this.otherMap,
+        center: this.currentCenter,
+        zoom: this.currentZoom, // Zoom level
+        container: 'otherMap', // Div element
+      });
+
+      this.sView.on(["pointer-down", "pointer-move"], () => {
+        this.otherMapView.zoom = this.sView.zoom;
+        this.otherMapView.center = this.sView.center;
       });
     },
     goToHubu() {
-        // goTo 返回的是一个promise，在then里面继续跳转
-        this.sView.goTo({
-          center: [114.32343438218466, 30.57965948283841],
-          zoom: 4,
-        }, {
-          duration: 2000,
-        }).then(() => {
+      // goTo 返回的是一个promise，在then里面继续跳转
+      this.sView.goTo({
+        center: [114.32343438218466, 30.57965948283841],
+        zoom: 4,
+      }, {
+        duration: 2000,
+      })
+        .then(() => {
           this.sView.goTo({
             center: [114.32343438218466, 30.57965948283841],
             zoom: 15,
@@ -129,9 +167,12 @@ export default {
       });
     },
     showCoordinates(evt) {
-        const point = this.sView.toMap({ x: evt.x, y: evt.y });
-        dom.byId("info").innerHTML = `${point.longitude.toFixed(3)}, ${point.latitude.toFixed(3)}`;
-      },
+      const point = this.sView.toMap({
+        x: evt.x,
+        y: evt.y,
+      });
+      dom.byId("info").innerHTML = `${point.longitude.toFixed(3)}, ${point.latitude.toFixed(3)}`;
+    },
     changeBase(val) {
       console.log(val);
       // 把点击的底图的value 传给basemap 完成修改底图
@@ -161,8 +202,7 @@ export default {
   mounted() {
     this.initMap();
   },
-  watch: {
-  },
+  watch: {},
 };
 </script>
 
@@ -172,30 +212,47 @@ export default {
     transform: rotate(1turn);
   }
 }
+
 .custom-map {
   height: 100%;
   width: 100%;
   display: flex;
-  #info{
+
+  #info {
     font-size: 18px;
     font-weight: bold;
   }
 
-  #mapWrap {
+  .multi-map-wrap {
     width: 70%;
+    position: relative;
+    #mapWrap {
+      width: 100%;
+      height: 100%;
+    }
+    #otherMap{
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      height: 40%;
+      width: 40%;
+    }
   }
 
   .operate-wrap {
     flex: 1;
     padding: 10px;
-    &>div{
+
+    & > div {
       margin-bottom: 10px;
     }
-    .navi-to{
+
+    .navi-to {
       display: flex;
       align-content: center;
       justify-content: center;
-      .goto-hubu{
+
+      .goto-hubu {
         height: 80px;
         width: 140px;
         line-height: 80px;
@@ -218,9 +275,9 @@ export default {
           background-size: 50% 50%, 50% 50%;
           background-position: 0 0, 100% 0, 100% 100%, 0 100%;
           background-image: linear-gradient(#399953, #399953),
-                            linear-gradient(#fbb300, #fbb300),
-                            linear-gradient(#d53e33, #d53e33),
-                            linear-gradient(#377af5, #377af5);
+          linear-gradient(#fbb300, #fbb300),
+          linear-gradient(#d53e33, #d53e33),
+          linear-gradient(#377af5, #377af5);
           animation: rotate 4s linear infinite;
         }
 
@@ -237,7 +294,7 @@ export default {
         }
       }
 
-      }
     }
   }
+}
 </style>
