@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import Final from "@/views/Final.vue";
 import Home from '../views/Home.vue';
 import Map from "../views/Map.vue";
 
@@ -15,6 +16,11 @@ const routes = [
     path: '/map',
     name: 'Map',
     component: Map,
+  },
+  {
+    path: '/final',
+    name: 'Final',
+    component: Final,
   },
 ];
 
