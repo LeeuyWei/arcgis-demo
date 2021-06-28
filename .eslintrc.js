@@ -11,9 +11,10 @@ module.exports = {
     ecmaVersion: 2020,
   },
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    indent: [0, 4],
-    quotes: [0, "double"],
+      'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+      'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+      indent: [0, 4],
+      quotes: [0, "double"],
+      "class-methods-use-this": "off",
   },
 };

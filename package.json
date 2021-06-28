@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@arcgis/core": "^4.19.3",
+    "axios": "^0.21.1",
     "dojo": "^1.16.4",
     "echarts": "^5.1.2",
     "element-ui": "^2.15.1",
