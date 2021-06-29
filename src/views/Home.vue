@@ -13,7 +13,7 @@ export default {
   },
   methods: {
     goMap() {
-      this.$router.push({ name: "Map" });
+      this.$router.push({ name: "Final" });
     },
   },
 };
