@@ -4,30 +4,34 @@
             全国人口数量
         </div>
         <div class="chart-wrap">
-            <div class="bar-chart-wrap" ref="barWrap"></div>
-            <div class="line-wrap" ref="lineWrap"></div>
+            <div class="bar-chart-wrap" v-charts-directive="barOpt" ref="barWrap"></div>
+            <div class="line-wrap" v-charts-directive="lineOpt" ref="lineWrap"></div>
         </div>
 
     </div>
 </template>
 
 <script>
-import myCharts from "@/service/charts.service";
+// import myCharts from "@/service/charts.service";
 import * as _ from "lodash";
+import chartsDirective from "@/directives/charts.directive";
 
 export default {
     name: "leftComponent",
     data() {
         return {
+            barOpt: {},
+            lineOpt: {},
         };
+    },
+    directives: {
+        chartsDirective,
     },
     props: {
         globalData: {
             type: Array,
             default: () => ([]),
         },
-    },
-    directives: {
     },
     methods: {
         drawBar() {
@@ -39,7 +43,7 @@ export default {
                 data2000.push(item.properties.pop2000);
                 data2010.push(item.properties.pop2010);
             });
-            const barOpt = {
+            this.barOpt = {
                 grid: {
                     right: 10,
                 },
@@ -96,7 +100,7 @@ export default {
                     },
                 ],
             };
-            const lineOpt = {
+            this.lineOpt = {
                 grid: {
                     right: 10,
                 },
@@ -153,8 +157,6 @@ export default {
                     },
                 ],
             };
-            myCharts.drawBarCharts(this.$refs.barWrap, barOpt);
-            myCharts.drawBarCharts(this.$refs.lineWrap, lineOpt);
         },
     },
     mounted() {
