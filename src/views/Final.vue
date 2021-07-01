@@ -1,11 +1,9 @@
 <template>
     <div class="final-wrap">
         <div class="slide-bar left-wrap">
-            <left-component :global-data="globalData"></left-component>
         </div>
         <div id="mapWrap"></div>
         <div class="slide-bar right-wrap">
-            <right-component :global-data="globalData"></right-component>
         </div>
     </div>
 </template>
@@ -16,20 +14,17 @@ import Map from "@arcgis/core/Map";
 import MapView from "@arcgis/core/views/MapView";
 import GeoJSONLayer from "@arcgis/core/layers/GeoJSONLayer";
 import PopupTemplate from "@arcgis/core/PopupTemplate";
-import leftComponent from "@/components/leftComponent.vue";
-import rightComponent from "@/components/rightComponent.vue";
 
 export default {
     name: "Final",
     components: {
-        leftComponent, rightComponent,
     },
     data() {
         return {
             sMap: null,
             currentBase: "topo-vector",
-            currentZoom: 4,
-            currentCenter: [108.5525, 34.3227],
+            currentZoom: 10,
+            currentCenter: [114.3, 30.5],
             sView: null,
             globalData: [],
         };
@@ -53,21 +48,14 @@ export default {
             this.sView.when(() => {
                 this.drawDistrict();
             });
-            this.getGlobalData();
-        },
-        getGlobalData() {
-            this.axios.get("https://cxqttkl.github.io/web4gis15/china.geojson")
-                .then((res) => {
-                    this.globalData = res.data.features;
-                });
         },
         drawDistrict() {
             const jsonLayer = new GeoJSONLayer({
-                url: "https://cxqttkl.github.io/web4gis15/china.geojson",
+                url: "https://cxqttkl.github.io/gis2018/武汉市.json",
             });
             jsonLayer.popupTemplate = new PopupTemplate({
-                title: "{ENGLISH}",
-                content: "点击了{ENGLISH},2000年人口是{pop2000}，2010年人口是{pop2010}",
+                title: "{name}",
+                content: "点击了{name},行政区代码是{adcode}",
             });
             this.sMap.add(jsonLayer);
         },
