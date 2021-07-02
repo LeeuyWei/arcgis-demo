@@ -37,7 +37,6 @@ export default {
                         }
                     });
                 });
-                console.log(this.dataObj);
             });
         },
     },
@@ -51,6 +50,7 @@ export default {
     .statistic-wrap{
         height: 200px;
         padding: 10px;
+        margin-bottom: 10px;
         display: flex;
         flex-direction: column;
         justify-content: space-around;

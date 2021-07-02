@@ -1,8 +1,9 @@
 <template>
     <div class="final-wrap">
         <div class="slide-bar left-wrap">
-            <div class="right-header">武汉的士</div>
+            <div class="right-header">武汉的士概况</div>
             <Statistic></Statistic>
+            <cars-table :s-map="sMap" :s-view="sView"></cars-table>
         </div>
         <div id="mapWrap"></div>
         <div class="slide-bar right-wrap">
@@ -17,11 +18,12 @@ import MapView from "@arcgis/core/views/MapView";
 import GeoJSONLayer from "@arcgis/core/layers/GeoJSONLayer";
 import PopupTemplate from "@arcgis/core/PopupTemplate";
 import Statistic from "@/components/Statistic.vue";
+import CarsTable from "@/components/CarsTable.vue";
 
 export default {
     name: "Final",
     components: {
-        Statistic,
+        Statistic, CarsTable,
     },
     data() {
         return {
