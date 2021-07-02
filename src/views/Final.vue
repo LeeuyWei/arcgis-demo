@@ -1,6 +1,8 @@
 <template>
     <div class="final-wrap">
         <div class="slide-bar left-wrap">
+            <div class="right-header">武汉的士</div>
+            <Statistic></Statistic>
         </div>
         <div id="mapWrap"></div>
         <div class="slide-bar right-wrap">
@@ -14,10 +16,12 @@ import Map from "@arcgis/core/Map";
 import MapView from "@arcgis/core/views/MapView";
 import GeoJSONLayer from "@arcgis/core/layers/GeoJSONLayer";
 import PopupTemplate from "@arcgis/core/PopupTemplate";
+import Statistic from "@/components/Statistic.vue";
 
 export default {
     name: "Final",
     components: {
+        Statistic,
     },
     data() {
         return {
@@ -84,6 +88,14 @@ export default {
         position: absolute;
         z-index: 2;
         padding: 10px;
+        .right-header{
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #fff;
+        }
     }
 
     .left-wrap {

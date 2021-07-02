@@ -9,6 +9,9 @@
   },
   "dependencies": {
     "@arcgis/core": "^4.19.3",
+    "@babel/plugin-proposal-optional-chaining": "^7.14.5",
+    "@vue/babel-preset-app": "^4.5.13",
+    "@vue/cli-plugin-babel": "^4.5.13",
     "axios": "^0.21.1",
     "dojo": "^1.16.4",
     "echarts": "^5.1.2",
